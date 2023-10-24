@@ -5,7 +5,6 @@
 @interface ImageDetective : NSObject <NativeImageDetectiveSpec>
 #else
 #import <React/RCTBridgeModule.h>
-
 @interface ImageDetective : NSObject <RCTBridgeModule>
 #endif
 

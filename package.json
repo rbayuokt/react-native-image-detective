@@ -1,7 +1,7 @@
 {
   "name": "react-native-image-detective",
-  "version": "0.1.0",
-  "description": "-",
+  "version": "1.0.0",
+  "description": "React Native library to simplify the integration of AI and ML features into your mobile app.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
