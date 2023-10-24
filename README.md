@@ -1,26 +1,79 @@
 # react-native-image-detective
 
--
+late-night brain sessions often lead to interesting questions. lately, I've been pondering:<br />
+"can React Native and the wild world of AI/ML join forces and create some magic? yes, they totally can!" 😎
+<br /><br />
+not one to let dreams stay as dreams, I dived into research mode. the burning question led me to a fascinating project where React Native and AI/ML got cozy.
+<br /><br />
+<b>why all this fuss? well, I'm on a mission to shake things up in the React Native community. forget pointing fingers, let's make it better together. this journey might be a baby step, but hey, even small steps can leave giant footprints.</b>
+<br /><br />
+powered by Google's MLKit, I whipped up native modules for Android (using Java), iOS (using Objective C) and TypeScript 🚀✨
+
+# Features
+well, I'm striving to make this library easy to integrate and user-friendly with minimal effort, so let's get started! <br />
+
+1. Face Detection
+2. Body Pose Detection ( WIP )
+3. Text Recognition ( WIP )
 
 ## Installation
 
 ```sh
 npm install react-native-image-detective
+or
+yarn add react-native-image-detective
+
+npx pod-install
 ```
 
-## Usage
+## Usage 
+select a picture from either your camera or device using another library of your choice. in this example folder, I've used `react-native-image-picker`
+
+1. Face Detection
 
 ```js
-import { multiply } from 'react-native-image-detective';
+import ImageDetective from 'react-native-image-detective';
 
-// ...
+// ... blablababla
 
-const result = await multiply(3, 7);
+const onImageChanges = async (res: ImagePickerResponse) => {
+    try {
+      if (!res.assets || !res.assets[0]?.uri) {
+        return;
+      }
+
+      const imagePath = res.assets[0].uri;
+      const image = await ImageDetective.analyze(imagePath);
+
+      console.log('[Image response] :', image.faces);
+
+      if (image.isValid) {
+        Alert.alert(
+          'Face detected',
+          'Hoorayy !!'
+        );
+      } else {
+        Alert.alert(
+          'Face not detected',
+          'Please reupload an image with your face in it.'
+        );
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+```
+2. Body Pose Detection
+```
+WIP
+```
+3. Text Recognition ( WIP )
+```
+WIP
 ```
 
 ## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+Please help me make this library both fun and useful to use. Share your ideas about what AI/ML features could be on the list for the next version!
 
 ## License
 
@@ -28,4 +81,4 @@ MIT
 
 ---
 
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+Made with ❤️ by @rbayuokt, thanks to [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
