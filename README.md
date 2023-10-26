@@ -1,5 +1,7 @@
 # react-native-image-detective
 
+<b>✨ ALL IN ONE, ALL IN JUST ONE LINE ✨</b>
+
 late-night brain sessions often lead to interesting questions. lately, I've been pondering:<br />
 "can React Native and the wild world of AI/ML join forces and create some magic? yes, they totally can!" 😎
 <br /><br />
@@ -13,8 +15,8 @@ powered by Google's MLKit, I whipped up native modules for Android (using Java),
 well, I'm striving to make this library easy to integrate and user-friendly with minimal effort, so let's get started! <br />
 
 1. Face Detection
-2. Body Pose Detection ( WIP )
-3. Text Recognition ( WIP )
+2. Barcode Scanner
+3. ... WIP
 
 ## Installation
 
@@ -43,7 +45,7 @@ const onImageChanges = async (res: ImagePickerResponse) => {
       }
 
       const imagePath = res.assets[0].uri;
-      const image = await ImageDetective.analyze(imagePath);
+      const image = await ImageDetective.analyzeFace(imagePath); // MAIN CODE
 
       console.log('[Image response] :', image.faces);
 
@@ -63,11 +65,37 @@ const onImageChanges = async (res: ImagePickerResponse) => {
     }
   };
 ```
-2. Body Pose Detection
+2. Barcode Scanner
+```js
+import ImageDetective from 'react-native-image-detective';
+
+// ... blablababla
+
+  const onBarcodeScan = async (res: ImagePickerResponse) => {
+    try {
+      if (!res.assets || !res.assets[0]?.uri) {
+        return;
+      }
+
+      const imagePath = res.assets[0].uri;
+      const barcode = await ImageDetective.analyzeBarcode(imagePath); // MAIN CODE
+      console.log('[barcode response] :', JSON.stringify(barcode));
+
+      if (barcode.isValid) {
+        Alert.alert('barcode result', JSON.stringify(barcode));
+        inputChangeHandler('imageBarcode')(imagePath);
+      } else {
+        inputChangeHandler('imageBarcode')('');
+        Alert.alert('Barcode not detected', 'Please reupload a barcode in it.');
+      }
+    } catch (error) {
+      inputChangeHandler('imageBarcode')('');
+      console.log('error', error);
+    }
+  };
 ```
-WIP
-```
-3. Text Recognition ( WIP )
+
+3. WIP
 ```
 WIP
 ```
