@@ -31,8 +31,8 @@ npx pod-install
 ## Usage 
 select a picture from either your camera or device using another library of your choice. in this example folder, I've used `react-native-image-picker`
 
-1. <b>Face Detection</b><br />
-![face-detection-demo]([https://github.com/rbayuokt/react-native-image-detective/blob/ea6658e1675a6648d75099564ebea43cd2e3f97c/demo/facedetector.gif]))
+1. <b>Face Detection</b><br /><br/>
+![face-detection-demo](https://github.com/rbayuokt/react-native-image-detective/blob/ea6658e1675a6648d75099564ebea43cd2e3f97c/demo/facedetector.gif))
 
 ```js
 import ImageDetective from 'react-native-image-detective';
@@ -68,8 +68,8 @@ const onImageChanges = async (res: ImagePickerResponse) => {
     }
   };
 ```
-2. <b>Barcode Scanner</b><br/>
-![face-detection-demo]([https://github.com/rbayuokt/react-native-image-detective/blob/ea6658e1675a6648d75099564ebea43cd2e3f97c/demo/barcode.gif]))<br />
+2. <b>Barcode Scanner</b><br/><br/>
+![barcode-scanner-demo](https://github.com/rbayuokt/react-native-image-detective/blob/ea6658e1675a6648d75099564ebea43cd2e3f97c/demo/barcode.gif))<br />
 supports the following formats: <br />Code-128, 39, 93, Codabar, Data Matrix, EAN-13, EAN-8, ITF, QR Code, UPC-A, UPC-E, PDF-417, and Aztec Code.
 
 ```js
