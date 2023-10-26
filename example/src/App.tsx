@@ -1,6 +1,12 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Alert,
+  Text,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
 import ImageDetective from 'react-native-image-detective';
 import UploadImagesCard from './components/UploadImagesCard./UploadImagesCard';
 import { useForm } from './utils/useForm';
@@ -8,12 +14,14 @@ import type { ImagePickerResponse } from 'react-native-image-picker';
 import normalize from './utils/normalize';
 
 export type IUploadImagesForm = {
-  image: string;
+  imageFace: string;
+  imageBarcode: string;
 };
 
 export default function App() {
   const { form, inputChangeHandler } = useForm<IUploadImagesForm>({
-    image: '',
+    imageFace: '',
+    imageBarcode: '',
   });
 
   const onImageChanges = async (res: ImagePickerResponse) => {
@@ -23,38 +31,74 @@ export default function App() {
       }
 
       const imagePath = res.assets[0].uri;
-      const image = await ImageDetective.analyze(imagePath);
+      const image = await ImageDetective.analyzeFace(imagePath);
       console.log('[Image response] :', image.faces);
 
       if (image.isValid) {
-        inputChangeHandler('image')(imagePath);
+        inputChangeHandler('imageFace')(imagePath);
       } else {
-        inputChangeHandler('image')('');
+        inputChangeHandler('imageFace')('');
         Alert.alert(
           'Face not detected',
           'Please reupload an image with your face in it.'
         );
       }
     } catch (error) {
-      inputChangeHandler('image')('');
+      inputChangeHandler('imageFace')('');
+      console.log('error', error);
+    }
+  };
+
+  const onBarcodeScan = async (res: ImagePickerResponse) => {
+    try {
+      if (!res.assets || !res.assets[0]?.uri) {
+        return;
+      }
+
+      const imagePath = res.assets[0].uri;
+      const barcode = await ImageDetective.analyzeBarcode(imagePath);
+      console.log('[barcode response] :', JSON.stringify(barcode));
+
+      if (barcode.isValid) {
+        Alert.alert('barcode result', JSON.stringify(barcode));
+        inputChangeHandler('imageBarcode')(imagePath);
+      } else {
+        inputChangeHandler('imageBarcode')('');
+        Alert.alert('Barcode not detected', 'Please reupload a barcode in it.');
+      }
+    } catch (error) {
+      inputChangeHandler('imageBarcode')('');
       console.log('error', error);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <UploadImagesCard
-        imageUri={form.image}
-        onImageCallback={(e) => onImageChanges(e)}
-      />
-    </View>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.bold}>Face Detection</Text>
+        <UploadImagesCard
+          imageUri={form.imageFace}
+          onImageCallback={(e) => onImageChanges(e)}
+        />
+        <Text style={styles.bold}>Barcode Scanner</Text>
+        <UploadImagesCard
+          imageUri={form.imageBarcode}
+          onImageCallback={(e) => onBarcodeScan(e)}
+          isContainImg
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: normalize(30, 'height'),
+    flexGrow: 1,
     padding: normalize(20),
+  },
+  bold: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: normalize(14, 'height'),
   },
 });

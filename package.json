@@ -1,6 +1,6 @@
 {
   "name": "react-native-image-detective",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "React Native library to simplify the integration of AI and ML features into your mobile app.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -9,7 +9,6 @@
   "source": "src/index",
   "files": [
     "src",
-    "lib",
     "android",
     "ios",
     "cpp",
@@ -84,7 +83,7 @@
   ],
   "packageManager": "yarn@3.6.1",
   "engines": {
-    "node": ">= 18.0.0"
+    "node": ">= 16.0.0"
   },
   "jest": {
     "preset": "react-native",

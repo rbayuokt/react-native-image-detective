@@ -17,6 +17,7 @@ type Props = {
   imageUri?: string;
   onImageCallback: (e: ImagePicker.ImagePickerResponse) => void;
   style?: StyleProp<ViewStyle>;
+  isContainImg?: boolean;
 };
 
 interface Action {
@@ -27,7 +28,12 @@ interface Action {
 
 const includeExtra = true;
 
-const UploadImagesCard = ({ imageUri, onImageCallback, style }: Props) => {
+const UploadImagesCard = ({
+  imageUri,
+  onImageCallback,
+  style,
+  isContainImg = false,
+}: Props) => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const onButtonPress = React.useCallback(
@@ -60,7 +66,13 @@ const UploadImagesCard = ({ imageUri, onImageCallback, style }: Props) => {
       >
         <View style={{ position: 'relative' }}>
           {imageUri ? (
-            <Image source={{ uri: imageUri }} style={styles.img} />
+            <Image
+              source={{ uri: imageUri }}
+              style={[
+                styles.img,
+                { resizeMode: isContainImg ? 'contain' : 'cover' },
+              ]}
+            />
           ) : (
             <View style={styles.box}>
               <Text>Upload Photo</Text>
@@ -151,7 +163,6 @@ const styles = StyleSheet.create({
   img: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
     borderRadius: 10,
   },
 });

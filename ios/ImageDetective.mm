@@ -2,6 +2,7 @@
 #import <React/RCTConvert.h>
 #import <MLKitVision/MLKitVision.h>
 #import <MLKitFaceDetection/MLKitFaceDetection.h>
+#import <MLKitBarcodeScanning/MLKitBarcodeScanning.h>
 
 @implementation ImageDetective
 static NSString *const RNFDErrorDomain = @"RNFDErrorDomain";
@@ -18,6 +19,9 @@ static NSString *const RNFDErrorDomain = @"RNFDErrorDomain";
 
 RCT_EXPORT_MODULE(ImageDetective)
 
+/**
+ * FACE DETECTION
+ */
 RCT_REMAP_METHOD(processImage,
                   processImageWithFilePath:(NSString *)filePath
                   faceDetectorOptions:(NSDictionary *)faceDetectorOptions
@@ -298,6 +302,79 @@ RCT_REMAP_METHOD(processImage,
     NSError *error = [NSError errorWithDomain:RNFDErrorDomain code:666 userInfo:userInfo];
     reject(userInfo[@"code"], userInfo[@"message"], error);
 }
+/**
+ * END OF FACE DETECTION
+ */
 
+/**
+ * BARCODE SCANNER
+ */
+RCT_REMAP_METHOD(processBarcode,
+                  processImageWithFilePath:(NSString *)filePath
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+{
+    [self UIImageForFilePath:filePath completion:^(NSArray *errorCodeMessageArray, UIImage *image) {
+        if (errorCodeMessageArray != nil) {
+            [self rejectPromiseWithUserInfo:reject userInfo:(NSMutableDictionary *)@{
+                @"code": errorCodeMessageArray[0],
+                @"message": errorCodeMessageArray[1],
+            }];
+            return;
+        }
+        
+        MLKBarcodeScannerOptions *options =
+          [[MLKBarcodeScannerOptions alloc]
+           initWithFormats: MLKBarcodeFormatCode128 | MLKBarcodeFormatCode39 | MLKBarcodeFormatCode93 | MLKBarcodeFormatCodaBar | MLKBarcodeFormatDataMatrix | MLKBarcodeFormatEAN13 | MLKBarcodeFormatEAN8 | MLKBarcodeFormatITF | MLKBarcodeFormatQRCode | MLKBarcodeFormatUPCA | MLKBarcodeFormatUPCE | MLKBarcodeFormatPDF417 | MLKBarcodeFormatAztec
+          ];
+        
+        MLKVisionImage *visionImage = [[MLKVisionImage alloc] initWithImage:image];
+        visionImage.orientation = image.imageOrientation;
+        
+        MLKBarcodeScanner *barcodeScanner = [MLKBarcodeScanner barcodeScanner];
+        [barcodeScanner processImage:visionImage
+                          completion:^(NSArray<MLKBarcode *> *_Nullable barcodes,
+                                       NSError *_Nullable error) {
+          if (error != nil) {
+              if (error != nil) {
+                  [self rejectPromiseWithUserInfo:reject userInfo:(NSMutableDictionary *)@{
+                      @"code": @"unknown",
+                      @"message": [error localizedDescription]
+                  }];
+                  return;
+              }
+            return;
+          }
+            
+          if (barcodes.count > 0) {
+              // Recognized barcodes
+              NSMutableArray *barcodeFormatted = [[NSMutableArray alloc] init];
+              
+              for (MLKBarcode *barcode in barcodes) {
+                  NSMutableDictionary *barcodeResponse = [[NSMutableDictionary alloc] init];
+                  NSArray *corners = barcode.cornerPoints;
+                  NSString *displayValue = barcode.displayValue;
+                  NSString *rawValue = barcode.rawValue;
+                  MLKBarcodeValueType valueType = barcode.valueType;
+                  NSMutableArray *cornersFormatted = [[NSMutableArray alloc] init];
+                  
+                  for (NSValue *pointValue in corners) {
+                      CGPoint point = [pointValue CGPointValue];
+                      [cornersFormatted addObject:@[@(point.x), @(point.y)]];
+                  }
+                  
+                  barcodeResponse[@"cornerPoints"] = cornersFormatted;
+                  barcodeResponse[@"displayValue"] = displayValue;
+                  barcodeResponse[@"rawValue"] = rawValue;
+                  [barcodeFormatted addObject:barcodeResponse];
+               }
+              resolve(barcodeFormatted);
+          }else{
+              NSMutableArray *barcodeFormatted = [[NSMutableArray alloc] init];
+              resolve(barcodeFormatted);
+          }
+        }];
+    }];
+}
 
 @end

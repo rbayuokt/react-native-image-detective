@@ -1,3 +1,7 @@
+/**
+ * FACE DETECTION TYPES
+ */
+
 export enum FaceDetectorClassificationMode {
   NONE = 1,
   ALL = 2,
@@ -102,4 +106,13 @@ export type FaceResult = {
       ];
     }
   ];
+};
+
+/**
+ * BARCODE SCANNER TYPES
+ */
+export type BarcodeResult = {
+  cornerPoints: Array<string>;
+  displayValue: string;
+  rawValue: string;
 };
