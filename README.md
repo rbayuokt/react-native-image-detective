@@ -1,5 +1,5 @@
 # react-native-image-detective
-
+![cover](https://github.com/rbayuokt/react-native-image-detective/blob/8d3dc2d4523290ccbdcdff62de065cb3b22bb19b/demo/cover.png)<br/><br/>
 <b>✨ ALL IN ONE, ALL IN JUST ONE LINE ✨</b>
 
 late-night brain sessions often lead to interesting questions. lately, I've been pondering:<br />
