@@ -442,6 +442,10 @@ PODS:
     - React-Core
   - react-native-image-picker (5.0.2):
     - React-Core
+  - react-native-skia (0.1.214):
+    - React
+    - React-callinvoker
+    - React-Core
   - React-NativeModulesApple (0.72.6):
     - hermes-engine
     - React-callinvoker
@@ -605,6 +609,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-image-detective (from `../..`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -702,6 +707,8 @@ EXTERNAL SOURCES:
     :path: "../.."
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-skia:
+    :path: "../node_modules/@shopify/react-native-skia"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-perflogger:
@@ -788,6 +795,7 @@ SPEC CHECKSUMS:
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
   react-native-image-detective: 4c10d290e8fb4f60104c68cddbdbe6695544c0b3
   react-native-image-picker: a5dddebb4d2955ac4712a4ed66b00a85f62a63ac
+  react-native-skia: 271f901631188fc8bf3173641c419a9c78787a52
   React-NativeModulesApple: 02e35e9a51e10c6422f04f5e4076a7c02243fff2
   React-perflogger: e3596db7e753f51766bceadc061936ef1472edc3
   React-RCTActionSheet: 17ab132c748b4471012abbcdcf5befe860660485
