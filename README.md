@@ -31,7 +31,7 @@ npx pod-install
 ## Usage 
 select a picture from either your camera or device using another library of your choice. in this example folder, I've used `react-native-image-picker`
 
-1. Face Detection
+1. <b>Face Detection</b>
 
 ```js
 import ImageDetective from 'react-native-image-detective';
@@ -45,7 +45,9 @@ const onImageChanges = async (res: ImagePickerResponse) => {
       }
 
       const imagePath = res.assets[0].uri;
-      const image = await ImageDetective.analyzeFace(imagePath); // MAIN CODE
+      // MAIN CODE
+      const image = await ImageDetective.analyzeFace(imagePath);
+      // END OF MAIN CODE
 
       console.log('[Image response] :', image.faces);
 
@@ -65,7 +67,9 @@ const onImageChanges = async (res: ImagePickerResponse) => {
     }
   };
 ```
-2. Barcode Scanner
+2. <b>Barcode Scanner</b><br/>
+supports the following formats: <br />Code-128, 39, 93, Codabar, Data Matrix, EAN-13, EAN-8, ITF, QR Code, UPC-A, UPC-E, PDF-417, and Aztec Code.
+
 ```js
 import ImageDetective from 'react-native-image-detective';
 
@@ -78,7 +82,9 @@ import ImageDetective from 'react-native-image-detective';
       }
 
       const imagePath = res.assets[0].uri;
-      const barcode = await ImageDetective.analyzeBarcode(imagePath); // MAIN CODE
+      // MAIN CODE
+      const barcode = await ImageDetective.analyzeBarcode(imagePath);
+      // END OF MAIN CODE
       console.log('[barcode response] :', JSON.stringify(barcode));
 
       if (barcode.isValid) {

@@ -35,6 +35,7 @@ export default function App() {
       console.log('[Image response] :', image.faces);
 
       if (image.isValid) {
+        Alert.alert('Face detected', 'Hoorayy !!');
         inputChangeHandler('imageFace')(imagePath);
       } else {
         inputChangeHandler('imageFace')('');
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
     padding: normalize(20),
   },
   bold: {
+    color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
     marginVertical: normalize(14, 'height'),
