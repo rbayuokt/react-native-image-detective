@@ -60,6 +60,7 @@ export default function App() {
       console.log('[barcode response] :', JSON.stringify(barcode));
 
       if (barcode.isValid) {
+        Alert.alert('barcode result', JSON.stringify(barcode));
         inputChangeHandler('imageBarcode')(imagePath);
       } else {
         inputChangeHandler('imageBarcode')('');

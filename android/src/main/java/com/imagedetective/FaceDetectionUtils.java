@@ -33,19 +33,6 @@ public class FaceDetectionUtils {
     return parsed;
   }
 
-  public static int[] rectToIntArray(@Nullable Rect rect) {
-    if (rect == null || rect.isEmpty()) {
-      return new int[]{};
-    }
-
-    return new int[]{
-      rect.left,
-      rect.top,
-      rect.right,
-      rect.bottom
-    };
-  }
-
   public static Map<String, Object> getLandmarkMap(FaceLandmark faceLandmark) {
     Map<String, Object> faceLandmarkMap = new HashMap<>();
     faceLandmarkMap.put(KEY_TYPE, faceLandmark.getLandmarkType());

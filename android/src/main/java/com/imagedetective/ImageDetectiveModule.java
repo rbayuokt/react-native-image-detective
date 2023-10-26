@@ -12,6 +12,10 @@ import com.facebook.react.bridge.WritableMap;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceContour;
@@ -34,6 +38,12 @@ import com.facebook.react.module.annotations.ReactModule;
 
 import static com.imagedetective.FaceDetectionCommon.*;
 import static com.imagedetective.FaceDetectionUtils.*;
+import static com.imagedetective.BarcodeScannerCommon.*;
+import static com.imagedetective.MLKitUtils.*;
+
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.Rect;
 
 @ReactModule(name = ImageDetectiveModule.NAME)
 public class ImageDetectiveModule extends ReactContextBaseJavaModule {
@@ -49,6 +59,9 @@ public class ImageDetectiveModule extends ReactContextBaseJavaModule {
     return NAME;
   }
 
+  /**
+   * FACE DETECTOR
+   */
   @ReactMethod
   public void processImage(String filePath, ReadableMap faceDetectorOptions, Promise promise) {
     FaceDetectorOptions options = getFaceDetectorOptions(Arguments.toBundle(faceDetectorOptions));
@@ -73,7 +86,6 @@ public class ImageDetectiveModule extends ReactContextBaseJavaModule {
       return;
     }
 
-//        FaceDetector detector = FaceDetectionModule.getClient(options);
     FaceDetector detector = FaceDetection.getClient(options);
 
     Task<List<Face>> result =detector.process(image);
@@ -87,7 +99,7 @@ public class ImageDetectiveModule extends ReactContextBaseJavaModule {
             Map<String, Object> faceFormatted = new HashMap<>();
 
             faceFormatted.put(KEY_BOUNDING_BOX,
-              FaceDetectionUtils.rectToIntArray(face.getBoundingBox())
+              MLKitUtils.rectToIntArray(face.getBoundingBox())
             );
 
             faceFormatted.put(KEY_HEAD_EULER_ANGLE_X, face.getHeadEulerAngleX());
@@ -224,4 +236,106 @@ public class ImageDetectiveModule extends ReactContextBaseJavaModule {
       }
     );
   }
+  /**
+   * END OF FACE DETECTOR
+   */
+
+  /**
+   * BARCODE SCANNER
+   */
+  @ReactMethod
+  public void processBarcode(String filePath, Promise promise){
+    InputImage image = null;
+    try {
+      image = InputImage.fromFilePath(
+        this.getReactApplicationContext(),
+        getUri(filePath)
+      );
+    } catch (IOException e) {
+      e.printStackTrace();
+
+      String code = "io-exception";
+      String message = e.getMessage();
+
+      WritableMap userInfoMap = Arguments.createMap();
+      userInfoMap.putString("code", code);
+      userInfoMap.putString("message", message);
+
+      promise.reject(code, message, userInfoMap);
+      return;
+    }
+
+    BarcodeScannerOptions options =
+      new BarcodeScannerOptions.Builder()
+        .setBarcodeFormats(
+          Barcode.FORMAT_CODE_128,
+          Barcode.FORMAT_CODE_39,
+          Barcode.FORMAT_CODE_93,
+          Barcode.FORMAT_CODABAR,
+          Barcode.FORMAT_EAN_13,
+          Barcode.FORMAT_EAN_8,
+          Barcode.FORMAT_ITF,
+          Barcode.FORMAT_UPC_A,
+          Barcode.FORMAT_UPC_E,
+          Barcode.FORMAT_QR_CODE,
+          Barcode.FORMAT_PDF417,
+          Barcode.FORMAT_AZTEC,
+          Barcode.FORMAT_DATA_MATRIX
+        )
+        .build();
+
+    BarcodeScanner scanner = BarcodeScanning.getClient();
+
+    Task<List<Barcode>> result = scanner.process(image)
+      .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+        @Override
+        public void onSuccess(List<Barcode> barcodes) {
+          List<Map<String, Object>> barcodesFormatted = new ArrayList<>(barcodes.size());
+          for (Barcode barcode: barcodes) {
+            Map<String, Object> barcodeFormatted = new HashMap<>();
+            Point[] corners = barcode.getCornerPoints();
+            List<float[]> cornersFormatted = new ArrayList<>(corners.length);
+            String rawValue = barcode.getRawValue();
+            String displayValue = barcode.getDisplayValue();
+
+            for (Point pointRaw : corners) {
+              cornersFormatted.add(MLKitUtils.getPointMap(pointRaw));
+            }
+
+            barcodeFormatted.put(KEY_BARCODE_BOUNDING_BOX,
+              MLKitUtils.rectToIntArray(barcode.getBoundingBox())
+            );
+
+            barcodeFormatted.put(KEY_CORNERS, cornersFormatted);
+            barcodeFormatted.put(KEY_DISPLAY_VALUE, displayValue);
+            barcodeFormatted.put(KEY_RAW_VALUE, rawValue);
+
+            barcodesFormatted.add(barcodeFormatted);
+          }
+          promise.resolve(
+            Arguments.makeNativeArray(barcodesFormatted)
+          );
+        }
+      })
+      .addOnFailureListener(new OnFailureListener() {
+        @Override
+        public void onFailure(@NonNull Exception e) {
+          String[] errorCodeAndMessage = FaceDetectionCommon.getErrorCodeAndMessageFromException(e);
+
+          String code = errorCodeAndMessage[0];
+          String message = errorCodeAndMessage[1];
+          String nativeErrorMessage = errorCodeAndMessage[2];
+
+          WritableMap userInfoMap = Arguments.createMap();
+          userInfoMap.putString("code", code);
+          userInfoMap.putString("message", message);
+          userInfoMap.putString("nativeErrorMessage", nativeErrorMessage);
+
+          promise.reject(code, message, userInfoMap);
+        }
+      });
+  }
+  /**
+   * END OF SCANNER
+   */
 }

@@ -353,12 +353,17 @@ RCT_REMAP_METHOD(processBarcode,
               for (MLKBarcode *barcode in barcodes) {
                   NSMutableDictionary *barcodeResponse = [[NSMutableDictionary alloc] init];
                   NSArray *corners = barcode.cornerPoints;
-
                   NSString *displayValue = barcode.displayValue;
                   NSString *rawValue = barcode.rawValue;
-
                   MLKBarcodeValueType valueType = barcode.valueType;
-                  barcodeResponse[@"cornerPoints"] = corners;
+                  NSMutableArray *cornersFormatted = [[NSMutableArray alloc] init];
+                  
+                  for (NSValue *pointValue in corners) {
+                      CGPoint point = [pointValue CGPointValue];
+                      [cornersFormatted addObject:@[@(point.x), @(point.y)]];
+                  }
+                  
+                  barcodeResponse[@"cornerPoints"] = cornersFormatted;
                   barcodeResponse[@"displayValue"] = displayValue;
                   barcodeResponse[@"rawValue"] = rawValue;
                   [barcodeFormatted addObject:barcodeResponse];
