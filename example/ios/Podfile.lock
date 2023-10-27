@@ -454,7 +454,7 @@ PODS:
   - React-jsinspector (0.72.6)
   - React-logger (0.72.6):
     - glog
-  - react-native-image-detective (1.0.5):
+  - react-native-image-detective (1.0.6):
     - GoogleMLKit/BarcodeScanning (= 4.0.0)
     - GoogleMLKit/FaceDetection (= 4.0.0)
     - GoogleMLKit/ImageLabeling (= 4.0.0)
@@ -821,7 +821,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 3bf18ff7cb03cd8dfdce08fbbc0d15058c1d71ae
   React-jsinspector: 194e32c6aab382d88713ad3dd0025c5f5c4ee072
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
-  react-native-image-detective: 0d1a5d2dd0e84baef85780b1ee6f6ab09cd09f80
+  react-native-image-detective: b076f7f9cef80e5f54b25094c6fe3b4065f47395
   react-native-image-picker: a5dddebb4d2955ac4712a4ed66b00a85f62a63ac
   react-native-skia: 271f901631188fc8bf3173641c419a9c78787a52
   React-NativeModulesApple: 02e35e9a51e10c6422f04f5e4076a7c02243fff2
