@@ -454,7 +454,7 @@ PODS:
   - React-jsinspector (0.72.6)
   - React-logger (0.72.6):
     - glog
-  - react-native-image-detective (1.0.6):
+  - react-native-image-detective (1.0.5):
     - GoogleMLKit/BarcodeScanning (= 4.0.0)
     - GoogleMLKit/FaceDetection (= 4.0.0)
     - GoogleMLKit/ImageLabeling (= 4.0.0)
