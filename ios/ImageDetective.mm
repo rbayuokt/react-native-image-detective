@@ -3,6 +3,8 @@
 #import <MLKitVision/MLKitVision.h>
 #import <MLKitFaceDetection/MLKitFaceDetection.h>
 #import <MLKitBarcodeScanning/MLKitBarcodeScanning.h>
+#import <MLKitImageLabeling/MLKitImageLabeling.h>
+#import <MLKitImageLabelingCommon/MLKitImageLabelingCommon.h>
 
 @implementation ImageDetective
 static NSString *const RNFDErrorDomain = @"RNFDErrorDomain";
@@ -376,5 +378,55 @@ RCT_REMAP_METHOD(processBarcode,
         }];
     }];
 }
+
+/**
+ * IMAGE LABELING
+ */
+RCT_REMAP_METHOD(processImageLabeler,
+                 processImageLabelerFilePath:(NSString *)filePath
+                 withResolver:(RCTPromiseResolveBlock)resolve
+                 withRejecter:(RCTPromiseRejectBlock)reject)
+{
+    [self UIImageForFilePath:filePath completion:^(NSArray *errorCodeMessageArray, UIImage *image) {
+        if (errorCodeMessageArray != nil) {
+            [self rejectPromiseWithUserInfo:reject userInfo:(NSMutableDictionary *)@{
+                @"code": errorCodeMessageArray[0],
+                @"message": errorCodeMessageArray[1],
+            }];
+            return;
+        }
+        
+        MLKVisionImage *visionImage = [[MLKVisionImage alloc] initWithImage:image];
+        MLKImageLabelerOptions *options = [[MLKImageLabelerOptions alloc] init];
+        options.confidenceThreshold = @(0.7);
+        MLKImageLabeler *labeler = [MLKImageLabeler imageLabelerWithOptions:options];
+        
+        [labeler processImage:visionImage
+        completion:^(NSArray *_Nullable labels,
+                    NSError *_Nullable error) {
+           if (error != nil) {
+               reject(error.userInfo[@"code"], error.userInfo[@"message"], error);
+           }
+
+            NSMutableArray *imageLabelerResult = [[NSMutableArray alloc] init];
+            for (MLKImageLabel *label in labels) {
+                NSMutableDictionary *imageLabel = [[NSMutableDictionary alloc] init];
+                NSString *labelText = label.text;
+                float confidence = label.confidence;
+                NSInteger index = label.index;
+                
+                imageLabel[@"labelText"] = labelText;
+                imageLabel[@"confidence"] = @(confidence);
+                imageLabel[@"index"] = @(index);
+                
+                [imageLabelerResult addObject:imageLabel];
+            }
+            resolve(imageLabelerResult);
+        }];
+    }];
+}
+/**
+ * END OF IMAGE LABELING
+ */
 
 @end

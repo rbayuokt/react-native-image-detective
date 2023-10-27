@@ -91,13 +91,10 @@ import ImageDetective from 'react-native-image-detective';
 
       if (barcode.isValid) {
         Alert.alert('barcode result', JSON.stringify(barcode));
-        inputChangeHandler('imageBarcode')(imagePath);
       } else {
-        inputChangeHandler('imageBarcode')('');
         Alert.alert('Barcode not detected', 'Please reupload a barcode in it.');
       }
     } catch (error) {
-      inputChangeHandler('imageBarcode')('');
       console.log('error', error);
     }
   };
