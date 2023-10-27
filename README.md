@@ -16,7 +16,8 @@ well, I'm striving to make this library easy to integrate and user-friendly with
 
 1. Face Detection
 2. Barcode Scanner
-3. ... WIP
+3. Image Labeler
+4. Coming Soon ! 🚀
 
 ## Installation
 
@@ -100,10 +101,32 @@ import ImageDetective from 'react-native-image-detective';
   };
 ```
 
-3. WIP
+3. <b>Image Labeler</b><br/><br/>
+![image-labeler-demo](https://github.com/rbayuokt/react-native-image-detective/blob/main/demo/imagelabeler.gif?raw=true)<br />
+```js
+import ImageDetective from 'react-native-image-detective';
+
+const onImageLabeler = async (res: ImagePickerResponse) => {
+    try {
+      if (!res.assets || !res.assets[0]?.uri) {
+        return;
+      }
+
+      const imagePath = res.assets[0].uri;
+      const imageLabeler = await ImageDetective.analyzeImage(imagePath);
+      
+      if (imageLabeler.isValid) {
+        console.log('[image labeler response] :', JSON.stringify(imageLabeler));
+      } else {
+        Alert.alert('Oopss!', 'error !');
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 ```
-WIP
-```
+
+4. <b>coming soon ! </b>🚀
 
 ## Contributing
 Please help me make this library both fun and useful to use. Share your ideas about what AI/ML features could be on the list for the next version!
