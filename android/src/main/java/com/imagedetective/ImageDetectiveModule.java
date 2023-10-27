@@ -35,10 +35,15 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
+import com.google.mlkit.vision.label.ImageLabel;
+import com.google.mlkit.vision.label.ImageLabeler;
+import com.google.mlkit.vision.label.ImageLabeling;
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 import static com.imagedetective.FaceDetectionCommon.*;
 import static com.imagedetective.FaceDetectionUtils.*;
 import static com.imagedetective.BarcodeScannerCommon.*;
+import static com.imagedetective.ImageLabelerCommon.*;
 import static com.imagedetective.MLKitUtils.*;
 
 import android.graphics.Point;
@@ -220,7 +225,7 @@ public class ImageDetectiveModule extends ReactContextBaseJavaModule {
       new OnFailureListener() {
         @Override
         public void onFailure(@NonNull Exception e) {
-          String[] errorCodeAndMessage = FaceDetectionCommon.getErrorCodeAndMessageFromException(e);
+          String[] errorCodeAndMessage = MLKitUtils.getErrorCodeAndMessageFromException(e);
 
           String code = errorCodeAndMessage[0];
           String message = errorCodeAndMessage[1];
@@ -320,7 +325,7 @@ public class ImageDetectiveModule extends ReactContextBaseJavaModule {
       .addOnFailureListener(new OnFailureListener() {
         @Override
         public void onFailure(@NonNull Exception e) {
-          String[] errorCodeAndMessage = FaceDetectionCommon.getErrorCodeAndMessageFromException(e);
+          String[] errorCodeAndMessage = MLKitUtils.getErrorCodeAndMessageFromException(e);
 
           String code = errorCodeAndMessage[0];
           String message = errorCodeAndMessage[1];
@@ -337,5 +342,79 @@ public class ImageDetectiveModule extends ReactContextBaseJavaModule {
   }
   /**
    * END OF SCANNER
+   */
+
+  /**
+   * END OF IMAGE LABELER
+   */
+  @ReactMethod
+  public void processImageLabeler(String filePath, Promise promise) {
+    InputImage image = null;
+    try {
+      image = InputImage.fromFilePath(
+        this.getReactApplicationContext(),
+        getUri(filePath)
+      );
+    } catch (IOException e) {
+      e.printStackTrace();
+
+      String code = "io-exception";
+      String message = e.getMessage();
+
+      WritableMap userInfoMap = Arguments.createMap();
+      userInfoMap.putString("code", code);
+      userInfoMap.putString("message", message);
+
+      promise.reject(code, message, userInfoMap);
+      return;
+    }
+
+    ImageLabelerOptions options = new ImageLabelerOptions.Builder()
+      .setConfidenceThreshold(0.7f)
+      .build();
+    ImageLabeler labeler = ImageLabeling.getClient(options);
+
+    labeler.process(image)
+      .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
+        @Override
+        public void onSuccess(List<ImageLabel> labels) {
+          List<Map<String, Object>> imageLabelerFormatted = new ArrayList<>(labels.size());
+          for (ImageLabel label : labels) {
+            Map<String, Object> labelFormatted = new HashMap<>();
+            String text = label.getText();
+            float confidence = label.getConfidence();
+            int index = label.getIndex();
+
+            labelFormatted.put(KEY_INDEX, index);
+            labelFormatted.put(KEY_LABEL_TEXT, text);
+            labelFormatted.put(KEY_CONFIDENCE, confidence);
+
+            imageLabelerFormatted.add(labelFormatted);
+          }
+          promise.resolve(
+            Arguments.makeNativeArray(imageLabelerFormatted)
+          );
+        }
+      })
+      .addOnFailureListener(new OnFailureListener() {
+        @Override
+        public void onFailure(@NonNull Exception e) {
+          String[] errorCodeAndMessage = MLKitUtils.getErrorCodeAndMessageFromException(e);
+
+          String code = errorCodeAndMessage[0];
+          String message = errorCodeAndMessage[1];
+          String nativeErrorMessage = errorCodeAndMessage[2];
+
+          WritableMap userInfoMap = Arguments.createMap();
+          userInfoMap.putString("code", code);
+          userInfoMap.putString("message", message);
+          userInfoMap.putString("nativeErrorMessage", nativeErrorMessage);
+
+          promise.reject(code, message, userInfoMap);
+        }
+      });
+  }
+  /**
+   * END OF IMAGE LABELER
    */
 }

@@ -11,6 +11,7 @@ import {
   //@ts-ignore
   FaceResult,
   type BarcodeResult,
+  type ImageLabelerResult,
 } from './types';
 
 const LINKING_ERROR =
@@ -141,7 +142,7 @@ async function analyzeBarcode(
 ): Promise<{ isValid: boolean; barcode: BarcodeResult }> {
   if (!localImageFilePath) {
     throw new Error(
-      "BarcodeScanner.processImage(*) 'localImageFilePath' expected a string local file path."
+      "BarcodeScanner.processBarcode(*) 'localImageFilePath' expected a string local file path."
     );
   }
 
@@ -153,10 +154,31 @@ async function analyzeBarcode(
   };
 }
 
+async function analyzeImage(localImageFilePath: string): Promise<{
+  isValid: boolean;
+  imageLabelerResult: Array<ImageLabelerResult>;
+}> {
+  if (!localImageFilePath) {
+    throw new Error(
+      "ImageLabeler.processImage(*) 'localImageFilePath' expected a string local file path."
+    );
+  }
+
+  const imageLabelerResult = await ImageDetective.processImageLabeler(
+    localImageFilePath
+  );
+
+  return {
+    imageLabelerResult: imageLabelerResult,
+    isValid: imageLabelerResult.length > 0 ? true : false,
+  };
+}
+
 export default {
   analyzeFace,
   createFaceDetectorOptions,
   analyzeBarcode,
+  analyzeImage,
 };
 
 export {

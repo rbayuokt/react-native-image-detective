@@ -80,6 +80,9 @@ PODS:
   - GoogleMLKit/FaceDetection (4.0.0):
     - GoogleMLKit/MLKitCore
     - MLKitFaceDetection (~> 3.0.0)
+  - GoogleMLKit/ImageLabeling (4.0.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitImageLabeling (~> 3.0.0)
   - GoogleMLKit/MLKitCore (4.0.0):
     - MLKitCommon (~> 9.0.0)
   - GoogleToolboxForMac/DebugUtils (2.3.2):
@@ -122,12 +125,28 @@ PODS:
   - MLKitFaceDetection (3.0.0):
     - MLKitCommon (~> 9.0)
     - MLKitVision (~> 5.0)
+  - MLKitImageLabeling (3.0.0):
+    - MLKitCommon (~> 9.0)
+    - MLKitImageLabelingCommon (~> 5.0)
+    - MLKitVision (~> 5.0)
+    - MLKitVisionKit (~> 6.0)
+  - MLKitImageLabelingCommon (5.0.0):
+    - MLKitCommon (~> 9.0)
+    - MLKitVision (~> 5.0)
+  - MLKitObjectDetectionCommon (5.0.0):
+    - MLKitCommon (~> 9.0)
+    - MLKitVision (~> 5.0)
   - MLKitVision (5.0.0):
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - GTMSessionFetcher/Core (< 3.0, >= 1.1)
     - MLImage (= 1.0.0-beta4)
     - MLKitCommon (~> 9.0)
+  - MLKitVisionKit (6.0.0):
+    - MLKitCommon (~> 9.0)
+    - MLKitImageLabelingCommon (~> 5.0)
+    - MLKitObjectDetectionCommon (~> 5.0)
+    - MLKitVision (~> 5.0)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -435,9 +454,10 @@ PODS:
   - React-jsinspector (0.72.6)
   - React-logger (0.72.6):
     - glog
-  - react-native-image-detective (1.0.2):
+  - react-native-image-detective (1.0.5):
     - GoogleMLKit/BarcodeScanning (= 4.0.0)
     - GoogleMLKit/FaceDetection (= 4.0.0)
+    - GoogleMLKit/ImageLabeling (= 4.0.0)
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-image-picker (5.0.2):
@@ -652,7 +672,11 @@ SPEC REPOS:
     - MLKitBarcodeScanning
     - MLKitCommon
     - MLKitFaceDetection
+    - MLKitImageLabeling
+    - MLKitImageLabelingCommon
+    - MLKitObjectDetectionCommon
     - MLKitVision
+    - MLKitVisionKit
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
@@ -774,7 +798,11 @@ SPEC CHECKSUMS:
   MLKitBarcodeScanning: 04e264482c5f3810cb89ebc134ef6b61e67db505
   MLKitCommon: c1b791c3e667091918d91bda4bba69a91011e390
   MLKitFaceDetection: 4981488f71ea8ed718cda692a29ab562637d9ae5
+  MLKitImageLabeling: 9fcdbbfbc454f22009c10015c403ac6319385cdf
+  MLKitImageLabelingCommon: 79ffbc10bd0c3a6407aa423aeb076f76a8883e15
+  MLKitObjectDetectionCommon: 424e43365d7ef7dd7005a4799e5303eeb4287fec
   MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
+  MLKitVisionKit: 5b5472d40ffc143bda693ba20a3cff44fe627d41
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
@@ -793,7 +821,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 3bf18ff7cb03cd8dfdce08fbbc0d15058c1d71ae
   React-jsinspector: 194e32c6aab382d88713ad3dd0025c5f5c4ee072
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
-  react-native-image-detective: 4c10d290e8fb4f60104c68cddbdbe6695544c0b3
+  react-native-image-detective: b076f7f9cef80e5f54b25094c6fe3b4065f47395
   react-native-image-picker: a5dddebb4d2955ac4712a4ed66b00a85f62a63ac
   react-native-skia: 271f901631188fc8bf3173641c419a9c78787a52
   React-NativeModulesApple: 02e35e9a51e10c6422f04f5e4076a7c02243fff2

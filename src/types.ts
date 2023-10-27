@@ -116,3 +116,12 @@ export type BarcodeResult = {
   displayValue: string;
   rawValue: string;
 };
+
+/**
+ * IMAGE LABELER
+ */
+export type ImageLabelerResult = {
+  labelText: string;
+  confidence: number;
+  index: number;
+};
