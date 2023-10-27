@@ -96,7 +96,7 @@ export default function App() {
         );
       } else {
         inputChangeHandler('imageLabeler')('');
-        Alert.alert('Barcode not detected', 'Please reupload a barcode in it.');
+        Alert.alert('Oopss!', 'error !');
       }
     } catch (error) {
       inputChangeHandler('imageLabeler')('');

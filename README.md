@@ -113,7 +113,9 @@ const onImageLabeler = async (res: ImagePickerResponse) => {
       }
 
       const imagePath = res.assets[0].uri;
+      // MAIN CODE
       const imageLabeler = await ImageDetective.analyzeImage(imagePath);
+      // END OF MAIN CODE
       
       if (imageLabeler.isValid) {
         console.log('[image labeler response] :', JSON.stringify(imageLabeler));
